@@ -1,0 +1,43 @@
+.fit-content {
+  width: fit-content;
+}
+.ft-14 {
+  font-size: 14px !important;
+}
+.ft-18 {
+  font-size: 18px !important;
+}
+
+textarea {
+  color: rgba(0, 0, 0, 0.65);
+}
+#multiselectContainerReact span {
+  background-color: #e8e8e8 !important;
+  color: rgb(82, 83, 86) !important;
+}
+#multiselectContainerReact .highlight {
+  background: rgba(0, 0, 0, 0.03);
+  color: rgba(0, 0, 0, 0.95);
+}
+.searchable-input,
+.searchable-list,
+.searchable-list-item:hover {
+  background-color: white !important;
+}
+.searchable-input {
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.25rem;
+}
+.searchable-list-item:hover {
+  background-color: white !important;
+}
+.searchable-input input,
+.searchable-list-item__active,
+.searchable-list-item {
+  color: rgba(0, 0, 0, 0.65) !important;
+}
+.btn-primary {
+  color: #fff !important;
+  background-color: #007bff !important;
+  border-color: #007bff !important;
+}

@@ -9,6 +9,7 @@ import * as serviceWorker from './serviceWorker';
 import App from './components/App';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'react-redux-toastr/lib/css/react-redux-toastr.min.css'
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 
 ReactDOM.render(
   <Provider store = {store}>

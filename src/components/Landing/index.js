@@ -6,7 +6,8 @@ import Firebase from '../Firebase';
 import { Button } from 'reactstrap';
 import Searchable from 'react-searchable-dropdown';
 import { Multiselect } from 'multiselect-react-dropdown';
-import Logo from '../../assets/logo.png';
+import Logo from '../../assets/image/logo.png';
+import '../../assets/css/common.css'
 import './landing.css';
 
 const INITIAL_STATE = {
@@ -19,6 +20,7 @@ const INITIAL_STATE = {
   feedbackDecline: '',
   availability: '',
   reason: [],
+  isShowAvailability: false
 };
 
 class Landing extends Component {
@@ -71,13 +73,29 @@ class Landing extends Component {
   };
 
   onSelect (selectedList) {
+    let isShowAvailability = false;
+    selectedList.map(item=>{
+      if (item.id === 0) {
+        isShowAvailability = true;
+      }
+    });
+    
     this.setState({
+      isShowAvailability: isShowAvailability,
       reason: selectedList,
     });
   }
 
   onRemove (selectedList) {
+    let isShowAvailability = false;
+    selectedList.map(item=>{
+      if (item.id === 0) {
+        isShowAvailability = true;
+      }
+    });
+
     this.setState({
+      isShowAvailability: isShowAvailability,
       reason: selectedList,
     });
   }
@@ -126,7 +144,7 @@ class Landing extends Component {
         reason: reason,
       };
     }
-    
+
     this.setState({loading: true});
     Firebase.firestore()
       .collection('projects')
@@ -379,19 +397,23 @@ class Landing extends Component {
                     />
                   </div>
                   <div className='mt-4'>
-                    <div className='ft-18 font-weight-bold mb-2'>
-                      Update Availability
+                    {this.state.isShowAvailability && 
+                    <div>
+                      <div className='ft-18 font-weight-bold mb-2'>
+                        Update Availability
+                      </div>
+                      <div className='ft-14'>
+                        Please update your availability for new projects.
+                      </div>
+                      <textarea
+                        className='form-control mt-2'
+                        rows='3'
+                        value={this.state.availability}
+                        onChange={this.onChange}
+                        name='availability'
+                      />
                     </div>
-                    <div className='ft-14'>
-                      Please update your availability for new projects.
-                    </div>
-                    <textarea
-                      className='form-control mt-2'
-                      rows='3'
-                      value={this.state.availability}
-                      onChange={this.onChange}
-                      name='availability'
-                    />
+                    }
                   </div>
                 </div>
               )}
