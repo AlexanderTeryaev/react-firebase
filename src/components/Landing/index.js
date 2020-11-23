@@ -89,9 +89,13 @@ class Landing extends Component {
       toastr.info("Required", 'please select one');
       return;
     }
-    this.setState({loading: true});
+    
     let formData = {};
     if (project === 'accept') {
+      if (this.state.answer === '' || this.state.call === '') {
+        toastr.info("Required", 'please insert required field');
+        return;
+      }
       formData = {
         project: project,
         answer: answer,
@@ -100,6 +104,10 @@ class Landing extends Component {
     }
 
     if (project === 'moreInfo') {
+      if (this.state.feedback === '') {
+        toastr.info("Required", 'please insert required field');
+        return;
+      }
       formData = {
         project: project,
         feedback: feedback,
@@ -107,6 +115,10 @@ class Landing extends Component {
     }
 
     if (project === 'decline') {
+      if (this.state.feedbackDecline === '' || this.state.availability === '' || this.state.reason.length === 0) {
+        toastr.info("Required", 'please insert required field');
+        return;
+      }
       formData = {
         project: project,
         feedbackDecline: feedbackDecline,
@@ -114,7 +126,8 @@ class Landing extends Component {
         reason: reason,
       };
     }
-
+    
+    this.setState({loading: true});
     Firebase.firestore()
       .collection('projects')
       .add(formData)
