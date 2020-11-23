@@ -80,9 +80,30 @@ class Landing extends Component {
         availability: data.InterestLevel && data.InterestLevel.availability ? data.InterestLevel.availability : '',
         reason: data.InterestLevel && data.InterestLevel.reason ? data.InterestLevel.reason : '',
         isShowAvailability: data.InterestLevel && data.InterestLevel.reason ? this.ShowAvailability(data.InterestLevel.reason) : false,
-        loading: false
+      }, ()=>{
+        this.getJobDetail(this.state.projectDetail.jobDetail)
       })
     });
+  }
+
+  getJobDetail = (jobDetail) => {
+    let job = [];
+    if (jobDetail.split('(').length > 1) {
+      jobDetail.split('(').map(item => {
+        if (item.includes(')')) {
+          job.push({name: item.split(')')[0], isUrl: true})
+          job.push({name: item.split(')')[1], isUrl: false})
+        } else {
+          job.push({name: item, isUrl: false});
+        }
+      })
+      this.setState({
+        jobDetail: job,
+        loading: false
+      })
+    } else {
+
+    }
   }
 
   handleInputChange (option) {
@@ -222,7 +243,13 @@ class Landing extends Component {
                   Job detail
                 </div>
                 <div className='ft-14'>
-                  {projectDetail.jobDetail}
+                  {this.state.jobDetail.map((item, index)=>
+                    item.isUrl ? (
+                      <a key={index} href= {'http://' + item.name}>( {item.name} )</a>
+                    ) : (
+                      <span key={index}>{item.name}</span>
+                    )
+                  )}
                 </div>
               </div>
               <div className='mt-4'>
