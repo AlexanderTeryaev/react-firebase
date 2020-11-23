@@ -1,0 +1,32 @@
+{
+  "name": "react-firebase-authentication",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "bootstrap": "^4.5.3",
+    "firebase": "^5.5.8",
+    "multiselect-react-dropdown": "^1.6.1",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3",
+    "react-redux": "^7.2.2",
+    "react-redux-toastr": "^7.6.5",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "2.1.1",
+    "react-searchable-dropdown": "^1.2.5",
+    "reactstrap": "^8.7.1",
+    "recompose": "^0.30.0",
+    "redux": "^4.0.5"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom --passWithNoTests",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}

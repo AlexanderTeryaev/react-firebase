@@ -1,0 +1,90 @@
+.main-contain {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  background-color: rgb(250, 250, 250);
+  color: rgba(0, 0, 0, 0.65);
+}
+.main {
+  width: 100%;
+  min-height: 100vh;
+  max-width: 580px;
+}
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.25rem;
+}
+.logo {
+  width: 200px;
+  height: 120px;
+  object-fit: scale-down;
+}
+.item {
+  background-color: rgb(234, 238, 248);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 8px;
+  margin-right: 8px;
+  padding: 2px 8px;
+  opacity: 1;
+  color: rgb(82, 83, 86);
+  border-radius: 4px;
+  cursor: pointer;
+  width: fit-content;
+}
+a {
+  color: #1890ff;
+  text-decoration: none;
+  background-color: transparent;
+  outline: none;
+  cursor: pointer;
+  -webkit-transition: color 0.3s;
+  transition: color 0.3s;
+  -webkit-text-decoration-skip: objects;
+}
+.icon {
+  margin-left: 2px;
+  color: red;
+  height: 24px;
+}
+
+.searchable-input, .searchable-list, .searchable-list-item:hover {
+  background-color: white !important;
+  
+}
+.searchable-input {
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.25rem;
+}
+.searchable-list-item:hover {
+  background-color: white !important;
+}
+.searchable-input input, .searchable-list-item__active, .searchable-list-item {
+  color: rgba(0, 0, 0, 0.65) !important;
+}
+.btn-primary {
+  color: #fff !important;
+  background-color: #007bff !important;
+  border-color: #007bff !important;
+}
+.bottom {
+  height: 40px;
+}
+.fit-content {
+  width: fit-content;
+}
+.ft-14 {
+  font-size: 14px !important;
+}
+.ft-18 {
+  font-size: 18px !important;
+}
