@@ -12,7 +12,6 @@ import './landing.css';
 
 const INITIAL_STATE = {
   error: null,
-  loading: false,
   project: null,
   call: '',
   answer: '',
@@ -20,13 +19,15 @@ const INITIAL_STATE = {
   feedbackDecline: '',
   availability: '',
   reason: [],
-  isShowAvailability: false
+  isShowAvailability: false,
+  id: '9bVdxwMvO5QSPLtb7JIV'
 };
 
 class Landing extends Component {
   constructor (props) {
     super(props);
     this.state = {
+      loading: true,
       ...INITIAL_STATE,
       reasons: [
         {
@@ -60,7 +61,29 @@ class Landing extends Component {
     this.onRemove = this.onRemove.bind(this);
   }
 
-  componentDidMount () {}
+  componentDidMount () {
+    this.getProjectData(this.state.id);
+  }
+
+  getProjectData =(id)=> {
+    Firebase.firestore().collection('projects')
+    .doc(id)
+    .onSnapshot(documentSnapshot => {
+      let data = documentSnapshot.data();
+      this.setState({
+        projectDetail: data,
+        project: data.InterestLevel && data.InterestLevel.project ? data.InterestLevel.project : null,
+        feedback: data.InterestLevel && data.InterestLevel.feedback ? data.InterestLevel.feedback : '',
+        answer: data.InterestLevel && data.InterestLevel.answer ? data.InterestLevel.answer : '',
+        call: data.InterestLevel && data.InterestLevel.call ? data.InterestLevel.call : '',
+        feedbackDecline: data.InterestLevel && data.InterestLevel.feedbackDecline ? data.InterestLevel.feedbackDecline : '',
+        availability: data.InterestLevel && data.InterestLevel.availability ? data.InterestLevel.availability : '',
+        reason: data.InterestLevel && data.InterestLevel.reason ? data.InterestLevel.reason : '',
+        isShowAvailability: data.InterestLevel && data.InterestLevel.reason ? this.ShowAvailability(data.InterestLevel.reason) : false,
+        loading: false
+      })
+    });
+  }
 
   handleInputChange (option) {
     this.setState({
@@ -72,30 +95,26 @@ class Landing extends Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  onSelect (selectedList) {
+  ShowAvailability =(selectedList)=> {
     let isShowAvailability = false;
     selectedList.map(item=>{
       if (item.id === 0) {
         isShowAvailability = true;
       }
     });
-    
+    return isShowAvailability
+  }
+
+  onSelect (selectedList) {
     this.setState({
-      isShowAvailability: isShowAvailability,
+      isShowAvailability: this.ShowAvailability(selectedList),
       reason: selectedList,
     });
   }
 
   onRemove (selectedList) {
-    let isShowAvailability = false;
-    selectedList.map(item=>{
-      if (item.id === 0) {
-        isShowAvailability = true;
-      }
-    });
-
     this.setState({
-      isShowAvailability: isShowAvailability,
+      isShowAvailability: this.ShowAvailability(selectedList),
       reason: selectedList,
     });
   }
@@ -146,23 +165,25 @@ class Landing extends Component {
     }
 
     this.setState({loading: true});
-    Firebase.firestore()
-      .collection('projects')
-      .add(formData)
-      .then(() => {
-        this.setState({ ...INITIAL_STATE }, () => {
-          toastr.success("Success", 'successfully created');
-        });
-      })
-      .catch(error => {
-        toastr.error("Error", error.message);
+    Firebase.firestore().collection("projects").doc(this.state.id).update({
+      InterestLevel: formData
+    })
+    .then(() => {
+      this.setState({ ...INITIAL_STATE, loading: false }, () => {
+        this.getProjectData(this.state.id);
+        toastr.success("Success", 'successfully updated');
       });
+    })
+    .catch(error => {
+      toastr.error("Error", error.message);
+    });
   }
 
   render () {
+    const { projectDetail } = this.state;
     return (
       <div className='main-contain'>
-        {!this.state.loading && 
+        {this.state.loading === false && this.state.projectDetail &&
           <div className='main'>
             <div className='card mt-4 p-4'>
               <img className='logo mb-4' src={Logo} alt='logo'/>
@@ -171,9 +192,9 @@ class Landing extends Component {
                   Company Name
                 </div>
                 <div className='d-flex flex-wrap'>
-                  <div className='item'>Example.com</div>
-                  <div className='item'>Example.com</div>
-                  <div className='item'>Example.com</div>
+                  <div className='item'>{projectDetail.companyName ? projectDetail.companyName : ''}</div>
+                  <div className='item'>{projectDetail.companyName ? projectDetail.companyName : ''}</div>
+                  <div className='item'>{projectDetail.companyName ? projectDetail.companyName : ''}</div>
                 </div>
               </div>
               <div className='mt-4'>
@@ -181,9 +202,9 @@ class Landing extends Component {
                   Company URL
                 </div>
                 <div className='d-flex flex-wrap'>
-                  <a href='http://test.com'>test.com</a>
-                  <a href='http://test.com'>, test.com</a>
-                  <a href='http://test.com'>, test.com</a>
+                  <a href= {'http://' + projectDetail.companyUrl}>{projectDetail.companyUrl}</a>
+                  <a href= {'http://' + projectDetail.companyUrl}>, {projectDetail.companyUrl}</a>
+                  <a href= {'http://' + projectDetail.companyUrl}>, {projectDetail.companyUrl}</a>
                 </div>
               </div>
               <div className='mt-4'>
@@ -191,9 +212,9 @@ class Landing extends Component {
                   Company Role
                 </div>
                 <div className='d-flex flex-wrap'>
-                  <div>CMO</div>
-                  <div>, CMO</div>
-                  <div>, CMO</div>
+                  <div>{projectDetail.companyRole}</div>
+                  <div>, {projectDetail.companyRole}</div>
+                  <div>, {projectDetail.companyRole}</div>
                 </div>
               </div>
               <div className='mt-4'>
@@ -201,66 +222,7 @@ class Landing extends Component {
                   Job detail
                 </div>
                 <div className='ft-14'>
-                  Search and Convert (
-                  <a href='http://searchandconvert.com/'>
-                    searchandconvert.com
-                  </a>
-                  ) is an SEO and Google advertising agency. They create
-                  and manage customized online campaigns for small and
-                  large companies in the ecommerce and B2B space. The
-                  majority of their clients are in WordPress,
-                  Squarespace and Hubspot. They help their clients set
-                  up a range of tools for tracking and combine them all
-                  in Google Analytics and then build reports out for
-                  them so they can use their own data. They then work
-                  with them on a retainer basis, so 20-40 hours a month.
-                  They are looking for a Paid Search Marketer who is an
-                  expert in Google Search, Google Display, and Google
-                  Analytics. This person will be managing a number of
-                  their clients Google Adwords accounts. The budget they
-                  will be managing is TBD, but their largest client
-                  account ad spend is 10k a month. They use Asana for
-                  project management and Slack for communication, so it
-                  would be a plus if this person has experience working
-                  within those. , Search and Convert (
-                  <a href='http://searchandconvert.com/'>searchandconvert.com</a>
-                  ) is an SEO and Google advertising agency. They create
-                  and manage customized online campaigns for small and
-                  large companies in the ecommerce and B2B space. The
-                  majority of their clients are in WordPress,
-                  Squarespace and Hubspot. They help their clients set
-                  up a range of tools for tracking and combine them all
-                  in Google Analytics and then build reports out for
-                  them so they can use their own data. They then work
-                  with them on a retainer basis, so 20-40 hours a month.
-                  They are looking for a Paid Search Marketer who is an
-                  expert in Google Search, Google Display, and Google
-                  Analytics. This person will be managing a number of
-                  their clients Google Adwords accounts. The budget they
-                  will be managing is TBD, but their largest client
-                  account ad spend is 10k a month. They use Asana for
-                  project management and Slack for communication, so it
-                  would be a plus if this person has experience working
-                  within those. , Search and Convert (
-                  <a href='http://searchandconvert.com/'>searchandconvert.com</a>
-                  ) is an SEO and Google advertising agency. They create
-                  and manage customized online campaigns for small and
-                  large companies in the ecommerce and B2B space. The
-                  majority of their clients are in WordPress,
-                  Squarespace and Hubspot. They help their clients set
-                  up a range of tools for tracking and combine them all
-                  in Google Analytics and then build reports out for
-                  them so they can use their own data. They then work
-                  with them on a retainer basis, so 20-40 hours a month.
-                  They are looking for a Paid Search Marketer who is an
-                  expert in Google Search, Google Display, and Google
-                  Analytics. This person will be managing a number of
-                  their clients Google Adwords accounts. The budget they
-                  will be managing is TBD, but their largest client
-                  account ad spend is 10k a month. They use Asana for
-                  project management and Slack for communication, so it
-                  would be a plus if this person has experience working
-                  within those.
+                  {projectDetail.jobDetail}
                 </div>
               </div>
               <div className='mt-4'>
@@ -268,11 +230,7 @@ class Landing extends Component {
                   Engagement Type
                 </div>
                 <div className='ft-14'>
-                  Hourly: Your hours per week are determined by the
-                  client based on your conversations and engagement
-                  scope. Generally, this is less than 20 hours per week
-                  but can vary week to week. Estimated number of hours
-                  per week will be discussed on your interview call.
+                  {projectDetail.engagementType}
                 </div>
               </div>
               <div className='mt-4 mb-4'>
@@ -281,7 +239,7 @@ class Landing extends Component {
                   <span className='icon'>*</span>
                 </div>
                 <Searchable
-                  value='' //if value is not item of options array, it would be ignored on mount
+                  value={this.state.project} //if value is not item of options array, it would be ignored on mount
                   placeholder='Search' // by default "Search"
                   notFoundText='No result found' // by default "No result found"
                   options={[
@@ -311,7 +269,7 @@ class Landing extends Component {
                       Great! Please answer the following questions:
                     </div>
                     <div className='ft-14'>1. Question one</div>
-                    <div className='ft-14'>1. Question two</div>
+                    <div className='ft-14'>2. Question two</div>
                   </div>
                   <div className='mt-4'>
                     <div className='ft-18 font-weight-bold mb-2'>
@@ -429,13 +387,13 @@ class Landing extends Component {
           </div>
         }
         
-        {this.state.loading && 
+        {this.state.loading === true && 
           <Loader
             type="Puff"
             color="#00BFFF"
             height={100}
             width={100}
-            timeout={300000} //3 secs
+            timeout={3000} //3 secs
           />
         }
       </div>
